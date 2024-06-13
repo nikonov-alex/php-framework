@@ -31,10 +31,10 @@ function makeRequestHandler( callable $modules ): callable {
 }
 
 function makeMain( callable $requestHandler ): callable {
-    return function ( array $_SERV ) use( $requestHandler ) {
+    return function ( array $_SERV, array $_REQ ) use( $requestHandler ) {
         HTTP\printResponse(
             $requestHandler(
-                HTTP\makeRequest( $_SERV )));
+                HTTP\makeRequest( $_SERV, $_REQ )));
     };
 }
 
