@@ -5,9 +5,6 @@
     use \NikonovAlex\Framework\HTTP;
 
     require_once 'dbquery.php';
-    require_once 'dbupdatequery.php';
-    require_once 'dbdeletequery.php';
-    require_once 'dbinsertquery.php';
 
     class DBConnectionOptions {
         private string $_DSN;
@@ -43,17 +40,17 @@
         return $handler( $request, $pdo, ... $passArgs );
     }
 
-    function insertDB( \PDO $pdo, DBInsertQuery $dbquery ): HTTP\Response {
+    function execQuery( \PDO $pdo, DBQuery $dbquery ): HTTP\Response {
         return FALSE === $pdo->exec( $dbquery->query() )
             ? new HTTP\Response( 500, 'Error while executing database operation occurred' )
             : HTTP\success( 'OK' );
     }
 
     function handlePOST( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return ( fn ( DBInsertQuery | \Exception $dbquery ) =>
+        return ( fn ( DBQuery | \Exception $dbquery ) =>
             $dbquery instanceof \Exception
                 ? new HTTP\Response( 500, $dbquery->getMessage() )
-            : insertDB( $pdo, $dbquery )
+            : execQuery( $pdo, $dbquery )
         )( $handler( $request, $pdo, ... $passArgs ) );
     }
 
