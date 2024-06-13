@@ -15,5 +15,8 @@
       "type": "vcs",
       "url": "https://github.com/nikonov-alex/php-framework.git"
     }
-  ]
+  ],
+  "require": {
+    "php": ">=8.2"
+  }
 }
