@@ -21,7 +21,7 @@ function dictionaryInsert( Array $array, string $key, $value ): Array {
     return $copy;
 }
 
-function printTemplate( string $template, Array $variables ): string {
+function printTemplate( string $template, Array $variables = [] ): string {
     extract( $variables );
     ob_start();
     require_once $template;
