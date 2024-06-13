@@ -1,6 +1,6 @@
 <?php
 
-namespace NikonovAlex\Framework\Template;
+namespace NikonovAlex\Framework\Template\CRUDSite;
 
 use \NikonovAlex\Framework\HTTP;
 use \NikonovAlex\Framework\Router;
