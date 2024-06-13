@@ -4,8 +4,6 @@
 
     use \NikonovAlex\Framework\HTTP;
 
-    require_once 'dbquery.php';
-
     class DBConnectionOptions {
         private string $_DSN;
         private string $_username;
@@ -33,24 +31,26 @@
 
 
     function connectDB( DBConnectionOptions $dbConnOptions ): \PDO {
-        return new \PDO( $dbConnOptions->DSN(), $dbConnOptions->username(), $dbConnOptions->password() );
+        return new \PDO( $dbConnOptions->DSN(), $dbConnOptions->username(), $dbConnOptions->password(), [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_SILENT
+        ] );
     }
 
     function handleGET( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
         return $handler( $request, $pdo, ... $passArgs );
     }
 
-    function execQuery( \PDO $pdo, DBQuery $dbquery ): HTTP\Response {
-        return FALSE === $pdo->exec( $dbquery->query() )
-            ? new HTTP\Response( 500, 'Error while executing database operation occurred' )
+    function execQuery( \PDOStatement $query ): HTTP\Response {
+        return FALSE === $query->execute()
+            ? new HTTP\Response( 500, 'Error occurred while executing database query' )
             : HTTP\success( 'OK' );
     }
 
     function handlePOST( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return ( fn ( DBQuery | \Exception $dbquery ) =>
+        return ( fn ( \PDOStatement | \Exception $dbquery ) =>
             $dbquery instanceof \Exception
                 ? new HTTP\Response( 500, $dbquery->getMessage() )
-            : execQuery( $pdo, $dbquery )
+            : execQuery( $dbquery )
         )( $handler( $request, $pdo, ... $passArgs ) );
     }
 
