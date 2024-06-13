@@ -7,6 +7,7 @@
     require_once 'dbquery.php';
     require_once 'dbupdatequery.php';
     require_once 'dbdeletequery.php';
+    require_once 'dbinsertquery.php';
 
     class DBConnectionOptions {
         private string $_DSN;
@@ -44,7 +45,7 @@
 
     function insertDB( \PDO $pdo, DBInsertQuery $dbquery ): HTTP\Response {
         return FALSE === $pdo->exec( $dbquery->query() )
-            ? new HTTP\Response( 500, 'Error while executing database operation occured' )
+            ? new HTTP\Response( 500, 'Error while executing database operation occurred' )
             : HTTP\success( 'OK' );
     }
 
