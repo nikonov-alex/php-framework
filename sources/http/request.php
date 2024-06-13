@@ -30,6 +30,12 @@ class Request {
         return $this->_params;
     }
 
+    public function param( string $name ): mixed {
+        return array_key_exists( $name, $this->_params )
+            ? $this->_params[$name]
+            : false;
+    }
+
 }
 
 function makeRequest( array $_SERV, array $_REQ ): Request {
