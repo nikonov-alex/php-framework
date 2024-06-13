@@ -1,0 +1,19 @@
+{
+  "name": "nikonov-alex/php-framework",
+  "version": "0.0.1",
+  "description": "PHP framework",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aleksander Nikonov",
+      "email": "nikonov.personal.mail@gmail.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/nikonov-alex/php-framework.git"
+    }
+  ]
+}
