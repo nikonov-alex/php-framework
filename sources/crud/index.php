@@ -38,14 +38,30 @@
         return new \PDO( $dbConnOptions->DSN(), $dbConnOptions->username(), $dbConnOptions->password() );
     }
 
-    function handleGet( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
+    function handleGET( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
         return $handler( $request, $pdo, ... $passArgs );
+    }
+
+    function insertDB( \PDO $pdo, DBInsertQuery $dbquery ): HTTP\Response {
+        return FALSE === $pdo->exec( $dbquery->query() )
+            ? new HTTP\Response( 500, 'Error while executing database operation occured' )
+            : HTTP\success( 'OK' );
+    }
+
+    function handlePOST( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
+        return ( fn ( DBInsertQuery | \Exception $dbquery ) =>
+            $dbquery instanceof \Exception
+                ? new HTTP\Response( 500, $dbquery->getMessage() )
+            : insertDB( $pdo, $dbquery )
+        )( $handler( $request, $pdo, ... $passArgs ) );
     }
 
     function handleCRUD( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
         return 'GET' === $request->method()
-            ? handleGet( $handler, $request, $pdo, ... $passArgs )
-        : $handler( $request, ... $passArgs );
+            ? handleGET( $handler, $request, $pdo, ... $passArgs )
+        : ( 'POST' === $request->method()
+            ? handlePOST( $handler, $request, $pdo, ... $passArgs )
+        : $handler( $request, ... $passArgs ) );
     }
 
     function handler( callable $handler, HTTP\Request $request, \PDO $pdo ): callable {
