@@ -4,6 +4,9 @@
 
     use \NikonovAlex\Framework\HTTP;
 
+    require_once 'dbquery.php';
+    require_once 'dbupdatequery.php';
+    require_once 'dbdeletequery.php';
 
     class DBConnectionOptions {
         private string $_DSN;
