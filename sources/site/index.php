@@ -6,6 +6,7 @@ use \NikonovAlex\Framework\HTTP;
 
 require_once 'site.php';
 require_once 'navigation.php';
+require_once 'navigation-item.php';
 
 function handler( callable $handler, HTTP\Request $request, Site $site ): callable {
     return fn ( HTTP\Request $request, ... $passArgs ): HTTP\Response =>
