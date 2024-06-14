@@ -39,7 +39,7 @@ class Request {
 }
 
 function getPath( string $url ): string {
-    ( fn ( $path ) =>
+    return ( fn ( $path ) =>
         '/' === $path
             ? $path
             : rtrim( $path, '/' )
