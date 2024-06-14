@@ -38,9 +38,17 @@ class Request {
 
 }
 
+function getPath( string $url ): string {
+    ( fn ( $path ) =>
+        '/' === $path
+            ? $path
+            : rtrim( $path, '/' )
+    )( strtok( $url, '?' ) );
+}
+
 function makeRequest( array $_SERV, array $_REQ ): Request {
     return new Request(
-        $_SERV['REQUEST_URI'],
+        getPath( $_SERV['REQUEST_URI'] ),
         $_SERV['REQUEST_METHOD'],
         $_REQ
     );
