@@ -27,3 +27,12 @@ function printTemplate( string $template, Array $variables = [] ): string {
     require $template;
     return ob_get_clean();
 }
+
+function arrayRemoveIndex( array $array, int | string $index ): array {
+    return !isset( $array[$index] )
+        ? $array
+        : ( function ( array $newArray ) use ( $index ) {
+            unset( $newArray[$index] );
+            return $newArray;
+        } )( $array );
+}

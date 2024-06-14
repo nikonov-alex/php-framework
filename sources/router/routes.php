@@ -19,8 +19,9 @@ class Route {
 }
 
 function findMethod( Route $route, string $method ): callable | false {
-    return Helpers\dictionaryFind( $route->methods(),
-        fn ( string $currentMethod ) => $currentMethod === $method );
+    return !empty ( $route->methods()[$method] )
+        ? $route->methods()[$method]
+        : false;
 }
 
 
