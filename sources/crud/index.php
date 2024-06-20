@@ -40,17 +40,24 @@
         return $handler( $request, $pdo, ... $passArgs );
     }
 
-    function execQuery( \PDOStatement $query ): HTTP\Response {
-        return FALSE === $query->execute()
-            ? new HTTP\Response( 500, 'Error occurred while executing database query' )
-            : HTTP\success( 'OK' );
+    function execQueries( array $queries ): HTTP\Response {
+        return array_search( false, array_map(
+            fn ( \PDOStatement $query ) => $query->execute(),
+            $queries
+        ) ) === false
+            ? HTTP\success( 'OK' )
+            : new HTTP\Response( 500, 'Error occurred while executing database query' );
     }
 
     function handlePOST( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return ( fn ( \PDOStatement | \Exception $dbquery ) =>
+        return ( fn ( \PDOStatement | array | \Exception $dbquery ) =>
             $dbquery instanceof \Exception
                 ? new HTTP\Response( 500, $dbquery->getMessage() )
-            : execQuery( $dbquery )
+            : execQueries(
+                $dbquery instanceof \PDOStatement
+                    ? [ $dbquery ]
+                    : $dbquery
+            )
         )( $handler( $request, $pdo, ... $passArgs ) );
     }
 
