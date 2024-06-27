@@ -11,11 +11,12 @@ use \NikonovAlex\Framework\Site;
 function composeModules(
     Router\Routes $routes,
     CRUD\DBConnectionOptions $dbConnOptions,
-    Site\Site $site
+    Site\Site $site,
+    string $prefix = ''
 ): callable {
     return Site\makeSite(
         CRUD\makeCRUD(
-            Router\makeRouter( $routes ),
+            Router\makeRouter( $routes, $prefix ),
             $dbConnOptions
         ),
         $site
@@ -41,11 +42,12 @@ function makeMain( callable $requestHandler ): callable {
 function makeCRUDSite(
     Router\Routes $routes,
     CRUD\DBConnectionOptions $dbConnOptions,
-    Site\Site $site
+    Site\Site $site,
+    string $prefix = ''
 ): callable {
     return makeMain(
         makeRequestHandler(
-            composeModules( $routes, $dbConnOptions, $site )
+            composeModules( $routes, $dbConnOptions, $site, $prefix )
         )
     );
 }

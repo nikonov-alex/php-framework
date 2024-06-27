@@ -46,7 +46,7 @@ function matchPath( Routes $routes, string $path ): Route | false {
         fn ( string $routeRegexp ) => preg_match( $routeRegexp, $path ) );
 }
 
-function findRoute( Routes $routes, HTTP\Request $request ): callable | false {
+function findRoute( Routes $routes, string $prefix, HTTP\Request $request ): callable | false {
     return ( fn ( Route | false $route ) =>
         !$route
             ? false
@@ -55,5 +55,10 @@ function findRoute( Routes $routes, HTTP\Request $request ): callable | false {
             ? false
             : $handler
         )( findMethod( $route, $request->method() ) )
-    )( matchPath( $routes, $request->path() ) );
+    )( matchPath( $routes, preg_replace(
+        "/^$prefix/",
+        '',
+        $request->path(),
+        1
+    ) ) );
 }
