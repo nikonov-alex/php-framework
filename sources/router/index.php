@@ -4,7 +4,7 @@
 
     require_once 'routes.php';
 
-    function makeRouter( Routes $routes, string $prefix = '' ): callable {
+    function makeRouter( Routes $routes ): callable {
         return fn ( HTTP\Request $request ): callable | false =>
-            findRoute( $routes, $prefix, $request );
+            findRoute( $routes, $request );
     }
