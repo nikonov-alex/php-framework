@@ -56,8 +56,8 @@ function findRoute( Routes $routes, string $prefix, HTTP\Request $request ): cal
             : $handler
         )( findMethod( $route, $request->method() ) )
     )( matchPath( $routes, preg_replace(
-        "/^$prefix/",
-        '',
+        [ "/^\/$prefix\//", "/^\/$prefix/" ],
+        '/',
         $request->path(),
         1
     ) ) );
