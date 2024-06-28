@@ -48,7 +48,7 @@ function getPath( string $url ): string {
 
 function makeRequest( array $_SERV, array $_REQ ): Request {
     return new Request(
-        getPath( $_SERV['PATH_INFO'] ),
+        getPath( !empty( $_SERV['PATH_INFO'] ) ? $_SERV['PATH_INFO'] : '/' ),
         $_SERV['REQUEST_METHOD'],
         $_REQ
     );
