@@ -46,13 +46,20 @@ function getPath( string $url ): string {
     )( strtok( $url, '?' ) );
 }
 
+function formatParams( array $params ): array {
+    return array_map( fn ( $value ) =>
+        is_array( $value )
+            ? formatParams( $value )
+        : ( is_numeric( $value )
+            ? $value + 0
+        : $value ),
+    $params );
+}
+
 function makeRequest( array $_SERV, array $_REQ ): Request {
     return new Request(
         getPath( !empty( $_SERV['PATH_INFO'] ) ? $_SERV['PATH_INFO'] : '/' ),
         $_SERV['REQUEST_METHOD'],
-        array_map( fn ( $value ) => is_numeric( $value )
-            ? $value + 0
-            : $value,
-        $_REQ )
+        formatParams( $_REQ )
     );
 }
