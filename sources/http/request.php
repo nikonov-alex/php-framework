@@ -50,6 +50,9 @@ function makeRequest( array $_SERV, array $_REQ ): Request {
     return new Request(
         getPath( !empty( $_SERV['PATH_INFO'] ) ? $_SERV['PATH_INFO'] : '/' ),
         $_SERV['REQUEST_METHOD'],
-        $_REQ
+        array_map( fn ( $value ) => is_numeric( $value )
+            ? $value + 0
+            : $value,
+        $_REQ )
     );
 }
