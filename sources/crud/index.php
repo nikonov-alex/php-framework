@@ -36,42 +36,9 @@
         ] );
     }
 
-    function handleGET( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return $handler( $request, $pdo, ... $passArgs );
-    }
-
-    function execQueries( array $queries ): HTTP\Response {
-        return array_search( false, array_map(
-            fn ( \PDOStatement $query ) => $query->execute(),
-            $queries
-        ) ) === false
-            ? HTTP\success( 'OK' )
-            : new HTTP\Response( 500, 'Error occurred while executing database query' );
-    }
-
-    function handlePOST( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return ( fn ( \PDOStatement | array | \Exception $dbquery ) =>
-            $dbquery instanceof \Exception
-                ? new HTTP\Response( 500, $dbquery->getMessage() )
-            : execQueries(
-                $dbquery instanceof \PDOStatement
-                    ? [ $dbquery ]
-                    : $dbquery
-            )
-        )( $handler( $request, $pdo, ... $passArgs ) );
-    }
-
-    function handleCRUD( callable $handler, HTTP\Request $request, \PDO $pdo, ... $passArgs ): HTTP\Response {
-        return 'GET' === $request->method()
-            ? handleGET( $handler, $request, $pdo, ... $passArgs )
-        : ( 'POST' === $request->method()
-            ? handlePOST( $handler, $request, $pdo, ... $passArgs )
-        : $handler( $request, ... $passArgs ) );
-    }
-
     function handler( callable $handler, HTTP\Request $request, \PDO $pdo ): callable {
         return fn ( HTTP\Request $request, ... $passArgs ): HTTP\Response =>
-            handleCRUD( $handler, $request, $pdo, ... $passArgs );
+            $handler( $request, $pdo, ... $passArgs );
     }
 
 
