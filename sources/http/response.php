@@ -22,7 +22,7 @@ class Response {
         return $this->_message;
     }
 
-    public function headers(): string {
+    public function headers(): array {
         return $this->_headers;
     }
 
