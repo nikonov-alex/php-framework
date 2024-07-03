@@ -6,10 +6,12 @@ class Response {
 
     private int $_status;
     private string $_message;
+    private array $_headers;
 
-    public function __construct( int $status, string $message ) {
+    public function __construct( int $status, string $message, array $headers = [] ) {
         $this->_status = $status;
         $this->_message = $message;
+        $this->_headers = $headers;
     }
 
     public function status(): int {
@@ -18,6 +20,10 @@ class Response {
 
     public function message(): string {
         return $this->_message;
+    }
+
+    public function headers(): string {
+        return $this->_headers;
     }
 
 }
@@ -35,8 +41,17 @@ function error404( string $message = '' ): Response {
     return new Response( 404, $message );
 }
 
+function redirect( string $location, bool $temp = false ): Response {
+    return new Response( $temp ? 302 : 301, '', [
+        'Location' => $location,
+    ] );
+}
+
 function printResponse( Response $response ) {
     http_response_code( $response->status() );
+    foreach ( $response->headers() as $header => $value ) {
+        header( "$header: $value" );
+    }
     echo $response->message();
     exit();
 }
