@@ -4,50 +4,50 @@ namespace NikonovAlex\Framework\HTTP;
 
 class Response {
 
-    private int $_status;
-    private string $_message;
-    private array $_headers;
+    private $_status;
+    private $_message;
+    private $_headers;
 
-    public function __construct( int $status, string $message, array $headers = [] ) {
+    public function __construct( $status, $message, $headers = [] ) {
         $this->_status = $status;
         $this->_message = $message;
         $this->_headers = $headers;
     }
 
-    public function status(): int {
+    public function status() {
         return $this->_status;
     }
 
-    public function message(): string {
+    public function message() {
         return $this->_message;
     }
 
-    public function headers(): array {
+    public function headers() {
         return $this->_headers;
     }
 
 }
 
 
-function emptyResponse( int $status ): Response {
+function emptyResponse( $status ) {
     return new Response( $status, '' );
 }
 
-function success( string $message ): Response {
+function success( $message ) {
     return new Response( 200, $message );
 }
 
-function error404( string $message = '' ): Response {
+function error404( $message = '' ) {
     return new Response( 404, $message );
 }
 
-function redirect( string $location, bool $temp = false ): Response {
+function redirect( $location, $temp = false ) {
     return new Response( $temp ? 302 : 301, '', [
         'Location' => $location,
     ] );
 }
 
-function printResponse( Response $response ) {
+function printResponse( $response ) {
     http_response_code( $response->status() );
     foreach ( $response->headers() as $header => $value ) {
         header( "$header: $value" );

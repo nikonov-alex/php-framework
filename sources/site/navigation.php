@@ -4,8 +4,8 @@ namespace NikonovAlex\Framework\Site;
 
 interface Navigation {
 
-    public function homeURL(): string;
+    public function homeURL();
 
-    public function items(): array;
+    public function items();
 
 }

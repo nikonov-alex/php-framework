@@ -8,20 +8,20 @@ require_once 'site.php';
 require_once 'navigation.php';
 require_once 'navigation-item.php';
 
-function handler( callable $handler, HTTP\Request $request, Site $site ): callable {
-    return fn ( HTTP\Request $request, ... $passArgs ): HTTP\Response =>
+function handler( $handler, $request, $site ) {
+    return fn ( $request, ... $passArgs ) =>
         $handler( $request, $site, ... $passArgs );
 }
 
-function handleRequest( HTTP\Request $request, callable $router, Site $site ): callable | false {
-    return ( fn ( callable | false $handler ): callable | false =>
+function handleRequest( $request, $router, $site ) {
+    return ( fn ( $handler ) =>
         !$handler
             ? false
             : handler( $handler, $request, $site )
     )( $router( $request ) );
 }
 
-function makeSite( callable $router, Site $site ): callable {
-    return fn ( HTTP\Request $request ): callable | false =>
+function makeSite( $router, $site ) {
+    return fn ( $request ) =>
         handleRequest( $request, $router, $site );
 }

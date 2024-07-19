@@ -5,54 +5,54 @@
     use \NikonovAlex\Framework\HTTP;
 
     class DBConnectionOptions {
-        private string $_DSN;
-        private string $_username;
-        private string $_password;
+        private $_DSN;
+        private $_username;
+        private $_password;
 
-        public function __construct( string $DSN, string $username, string $password ) {
+        public function __construct( $DSN, $username, $password ) {
             $this->_DSN = $DSN;
             $this->_username = $username;
             $this->_password = $password;
         }
 
-        public function DSN() : string {
+        public function DSN() {
             return $this->_DSN;
         }
 
-        public function username() : string {
+        public function username() {
             return $this->_username;
         }
 
-        public function password() : string {
+        public function password() {
             return $this->_password;
         }
 
     }
 
 
-    function connectDB( DBConnectionOptions $dbConnOptions ): \PDO {
+    function connectDB( $dbConnOptions ) {
         return new \PDO( $dbConnOptions->DSN(), $dbConnOptions->username(), $dbConnOptions->password(), [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_SILENT
         ] );
     }
 
-    function handler( callable $handler, HTTP\Request $request, \PDO $pdo ): callable {
-        return fn ( HTTP\Request $request, ... $passArgs ): HTTP\Response =>
+    function handler( $handler, $request, $pdo ) {
+        return fn ( $request, ... $passArgs ) =>
             $handler( $request, $pdo, ... $passArgs );
     }
 
 
-    function handleRequest( HTTP\Request $request, callable $router, DBConnectionOptions $dbConnOptions ): callable | false {
-        return ( fn ( callable | false $handler ): callable | false =>
+    function handleRequest( $request, $router, $dbConnOptions ) {
+        return ( fn ( $handler ) =>
             !$handler
                 ? false
-                : ( fn ( \PDO $pdo ): callable =>
+                : ( fn ( $pdo ) =>
                     handler( $handler, $request, $pdo )
                 )( connectDB( $dbConnOptions ) )
         )( $router( $request ) );
     }
 
-    function makeCRUD( callable $router, DBConnectionOptions $dbConnOptions ): callable {
-        return fn ( HTTP\Request $request ): callable | false =>
+    function makeCRUD( $router, $dbConnOptions ) {
+        return fn ( $request ) =>
             handleRequest( $request, $router, $dbConnOptions );
     }

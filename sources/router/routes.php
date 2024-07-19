@@ -6,19 +6,19 @@ use \NikonovAlex\Framework\Helpers;
 
 class Route {
 
-    private array $_methods;
+    private $_methods;
 
-    public function __construct( array $methods ) {
+    public function __construct( $methods ) {
         $this->_methods = $methods;
     }
 
-    public function methods(): array {
+    public function methods() {
         return $this->_methods;
     }
 
 }
 
-function findMethod( Route $route, string $method ): callable | false {
+function findMethod( $route, $method ) {
     return !empty ( $route->methods()[$method] )
         ? $route->methods()[$method]
         : false;
@@ -29,28 +29,28 @@ function findMethod( Route $route, string $method ): callable | false {
 
 class Routes {
 
-    private array $_routes;
+    private $_routes;
 
-    public function __construct( array $routes ) {
+    public function __construct( $routes ) {
         $this->_routes = $routes;
     }
 
-    public function routes(): array {
+    public function routes() {
         return $this->_routes;
     }
 
 }
 
-function matchPath( Routes $routes, string $path ): Route | false {
+function matchPath( $routes, $path ) {
     return Helpers\dictionaryFind( $routes->routes(),
-        fn ( string $routeRegexp ) => preg_match( $routeRegexp, $path ) );
+        fn ( $routeRegexp ) => preg_match( $routeRegexp, $path ) );
 }
 
-function findRoute( Routes $routes, HTTP\Request $request ): callable | false {
-    return ( fn ( Route | false $route ) =>
+function findRoute( $routes, $request ) {
+    return ( fn ( $route ) =>
         !$route
             ? false
-            : ( fn ( callable | false $handler ) =>
+            : ( fn ( $handler ) =>
         !$handler
             ? false
             : $handler

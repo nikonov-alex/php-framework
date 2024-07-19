@@ -4,6 +4,6 @@ namespace NikonovAlex\Framework\Site;
 
 interface Site {
 
-    public function navigation(): Navigation;
+    public function navigation();
 
 }

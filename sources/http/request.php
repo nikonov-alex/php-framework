@@ -4,33 +4,33 @@ namespace NikonovAlex\Framework\HTTP;
 
 class Request {
 
-    private string $_path;
-    private string $_method;
-    private array $_params;
+    private $_path;
+    private $_method;
+    private $_params;
 
     public function __construct(
-        string $path,
-        string $method,
-        array $params = []
+        $path,
+        $method,
+        $params = []
     ) {
         $this->_path = $path;
         $this->_method = $method;
         $this->_params = $params;
     }
 
-    public function path(): string {
+    public function path() {
         return $this->_path;
     }
 
-    public function method(): string {
+    public function method() {
         return $this->_method;
     }
 
-    public function params(): array {
+    public function params() {
         return $this->_params;
     }
 
-    public function param( string $name ): mixed {
+    public function param( $name ) {
         return array_key_exists( $name, $this->_params )
             ? $this->_params[$name]
             : false;
@@ -38,7 +38,7 @@ class Request {
 
 }
 
-function getPath( string $url ): string {
+function getPath( $url ) {
     return ( fn ( $path ) =>
         '/' === $path
             ? $path
@@ -46,7 +46,7 @@ function getPath( string $url ): string {
     )( strtok( $url, '?' ) );
 }
 
-function formatParams( array $params ): array {
+function formatParams( $params ) {
     return array_map( fn ( $value ) =>
         is_array( $value )
             ? formatParams( $value )
@@ -56,7 +56,7 @@ function formatParams( array $params ): array {
     $params );
 }
 
-function makeRequest( array $_SERV, array $_REQ ): Request {
+function makeRequest( $_SERV, $_REQ ) {
     return new Request(
         getPath( !empty( $_SERV['PATH_INFO'] ) ? $_SERV['PATH_INFO'] : '/' ),
         $_SERV['REQUEST_METHOD'],

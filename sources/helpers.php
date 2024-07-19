@@ -2,7 +2,7 @@
 
 namespace NikonovAlex\Framework\Helpers;
 
-function arrayFind( Array $array, callable $callback ) {
+function arrayFind( $array, $callback ) {
     foreach ( $array as $key => $value ) {
         if ( $callback( $key, $value ) ) {
             return $value;
@@ -11,27 +11,27 @@ function arrayFind( Array $array, callable $callback ) {
     return false;
 }
 
-function dictionaryFind( Array $array, callable $callback ) {
-    return arrayFind( $array, fn ( string $key, $value ) => $callback( $key ) );
+function dictionaryFind( $array, $callback ) {
+    return arrayFind( $array, fn ( $key, $value ) => $callback( $key ) );
 }
 
-function dictionaryInsert( Array $array, string $key, $value ): Array {
+function dictionaryInsert( $array, $key, $value ) {
     $copy = $array;
     $copy[$key] = $value;
     return $copy;
 }
 
-function printTemplate( string $template, Array $variables = [] ): string {
+function printTemplate( $template, $variables = [] ) {
     extract( $variables );
     ob_start();
     require $template;
     return ob_get_clean();
 }
 
-function arrayRemoveIndex( array $array, int | string $index ): array {
+function arrayRemoveIndex( $array, $index ) {
     return !isset( $array[$index] )
         ? $array
-        : ( function ( array $newArray ) use ( $index ) {
+        : ( function ( $newArray ) use ( $index ) {
             unset( $newArray[$index] );
             return $newArray;
         } )( $array );

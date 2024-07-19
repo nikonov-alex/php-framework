@@ -3,25 +3,25 @@
 namespace NikonovAlex\Framework\Site;
 
 class NavigationItem {
-    private string $_title;
-    private string $_icon;
-    private string $_url;
+    private $_title;
+    private $_icon;
+    private $_url;
 
-    public function __construct( string $title, string $icon, string $url ) {
+    public function __construct( $title, $icon, $url ) {
         $this->_title = $title;
         $this->_icon = $icon;
         $this->_url = $url;
     }
 
-    public function title(): string {
+    public function title() {
         return $this->_title;
     }
 
-    public function icon(): string {
+    public function icon() {
         return $this->_icon;
     }
 
-    public function URL(): string {
+    public function URL() {
         return $this->_url;
     }
 }
